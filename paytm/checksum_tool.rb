@@ -2,10 +2,6 @@ class ChecksumTool
   include EncryptionNewPG
   
   PAYTM_MERCHANT_KEY = ""
-	WEBSITE = ""
-	MID = ""
-	INDUSTRY_TYPE_ID = ""
-	CHANNEL_ID = ""
 
   def self.is_valid_merchant_id?(mid)
     return mid.eql?(MID)
