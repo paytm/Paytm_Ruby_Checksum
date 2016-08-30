@@ -13,6 +13,10 @@ module EncryptionNewPG
   ### function returns dictionary of encrypted data ###
   ### accepts a dictionary with data and key to encrypt with ###
   ### can accept multiple key value pairs in the dictionary ###
+  
+  PaytmRequestParams = ["REQUEST_TYPE","MID","ORDER_ID","CUST_ID","TXN_AMOUNT","CHANNEL_ID","INDUSTRY_TYPE_ID","WEBSITE","MOBILE_NO","EMAIL","MSISDN","CALLBACK_URL","THEME","SUBS_SERVICE_ID","SUBS_AMOUNT_TYPE","SUBS_FREQUENCY","SUBS_FREQUENCY_UNIT","SUBS_ENABLE_RETRY","SUBS_EXPIRY_DATE","PAYMENT_MODE_ONLY","AUTH_MODE","PAYMENT_TYPE_ID","CARD_TYPE","BANK_CODE","PROMO_CAMP_ID","SUBS_MAX_AMOUNT","SUBS_START_DATE","SUBS_GRACE_DAYS","SUBS_ID","ORDERID","REFUNDAMOUNT","TXNTYPE","REFID","TXNID","COMMENTS","MERC_UNQ_REF"]
+  PaytmResponseParams = ["SUBS_ID","MID","BANKTXNID","TXNAMOUNT","CURRENCY","STATUS","RESPCODE","RESPMSG","TXNDATE","GATEWAYNAME","BANKNAME","PAYMENTMODE","PROMO_CAMP_ID","PROMO_STATUS","PROMO_RESPCODE","ORDERID","TXNID","REFUNDAMOUNT","REFID","MERC_UNQ_REF"]
+  
   def new_pg_encrypt(paytmparams)
     if (paytmparams.class != Hash) || (paytmparams.keys == [])
       return false
@@ -137,16 +141,23 @@ module EncryptionNewPG
     if key.empty?
       return false
     end
-    salt = new_pg_generate_salt(salt_length)
-    keys = paytmparams.keys
+	checkSumParamHash = Hash.new
+	keys = paytmparams.keys
+	keys.each do |k|		
+		if PaytmRequestParams.include?(k)
+                    checkSumParamHash[k] = paytmparams[k]
+		end
+	end     
+	salt = new_pg_generate_salt(salt_length)
+    keys = checkSumParamHash.keys
     str = nil
     keys = keys.sort
     keys.each do |k|
       if str.nil?
-        str = paytmparams[k].to_s
+        str = checkSumParamHash[k].to_s
         next
       end
-      str = str + '|'  + paytmparams[k].to_s
+      str = str + '|'  + checkSumParamHash[k].to_s
     end
     str = str + '|' + salt
     check_sum = Digest::SHA256.hexdigest(str)
@@ -178,16 +189,23 @@ module EncryptionNewPG
       return false
     end
     begin
-      salt = check_sum[(check_sum.length-salt_length), (check_sum.length)]
-      keys = paytmparams.keys
+	checkSumParamHash = Hash.new
+	keys = paytmparams.keys
+	keys.each do |k|		
+		if PaytmResponseParams.include?(k)
+                    checkSumParamHash[k] = paytmparams[k]
+		end
+	end    
+	  salt = check_sum[(check_sum.length-salt_length), (check_sum.length)]
+      keys = checkSumParamHash.keys
       str = nil
       keys = keys.sort
       keys.each do |k|
         if str.nil?
-          str = paytmparams[k].to_s
+          str = checkSumParamHash[k].to_s
           next
         end
-        str = str + '|' + paytmparams[k].to_s
+        str = str + '|' + checkSumParamHash[k].to_s
       end
       str = str + '|' + salt
       generated_check_sum = Digest::SHA256.hexdigest(str)
