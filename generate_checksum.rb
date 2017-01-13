@@ -17,7 +17,15 @@ keys = params.keys
 keys.each do |k|
 	if ! params[k].empty?
 		paytmHASH[k] = params[k]
+		if paytmHASH[k].to_s.include? "REFUND"
+		    @x = 'true'
+		    break
+		end
 	end
+end
+if @x == 'true'    
+    paytmHASH.clear
+    exit
 end
 mid = paytmHASH["MID"]
 order_id = paytmHASH["ORDER_ID"]
