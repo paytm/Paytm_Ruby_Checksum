@@ -13,6 +13,14 @@ puts ""
 
 paytmHASH = Hash.new
 
+paytmHASH["MID"] = '';
+paytmHASH["ORDER_ID"] = '';
+paytmHASH["CUST_ID"] = '';
+paytmHASH["INDUSTRY_TYPE_ID"] = '';
+paytmHASH["CHANNEL_ID"] = '';
+paytmHASH["TXN_AMOUNT"] = '';
+paytmHASH["WEBSITE"] = '';
+
 keys = params.keys
 keys.each do |k|
 	if ! params[k].empty?
