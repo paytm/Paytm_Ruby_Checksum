@@ -24,7 +24,8 @@ paytmHASH["WEBSITE"] = '';
 keys = params.keys
 keys.each do |k|
 	if ! params[k].empty?
-		if params[k].to_s.include? "REFUND"
+		#if params[k].to_s.include? "REFUND"
+		unless params[k].to_s.include? "REFUND" or params[k].to_s.include? "|"
 		    next
 		end
 		paytmHASH[k] = params[k]
