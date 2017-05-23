@@ -157,7 +157,9 @@ module EncryptionNewPG
         str = checkSumParamHash[k].to_s
         next
       end
-      str = str + '|'  + checkSumParamHash[k].to_s
+      unless checkSumParamHash[k].to_s.include? "REFUND" or checkSumParamHash[k].to_s.include? "|"
+      	str = str + '|'  + checkSumParamHash[k].to_s
+      end
     end
     str = str + '|' + salt
     check_sum = Digest::SHA256.hexdigest(str)

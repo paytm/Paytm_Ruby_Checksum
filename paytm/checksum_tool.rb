@@ -15,12 +15,6 @@ class ChecksumTool
 		paytmparams.delete("CHECKSUMHASH")
     return_array = paytmparams		
 		
-    is_valid_checksum = new_pg_verify_checksum(paytmparams, checksum_hash, PAYTM_MERCHANT_KEY)
-    if(is_valid_checksum)
-      return_array["IS_CHECKSUM_VALID"] = "Y"
-    else
-      return_array["IS_CHECKSUM_VALID"] = "N"
-    end
-    return return_array
+    return new_pg_verify_checksum(paytmparams, checksum_hash, PAYTM_MERCHANT_KEY)   
   end
 end
