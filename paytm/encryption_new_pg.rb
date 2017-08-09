@@ -27,7 +27,8 @@ module EncryptionNewPG
     encrypted_data = Hash[]
     key = paytmparams.delete(:key)
     keys = paytmparams.keys
-    aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    ##aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    aes = OpenSSL::Cipher::AES.new('128-CBC')
     begin
       keys.each do |k|
         data = paytmparams[k]
@@ -52,7 +53,8 @@ module EncryptionNewPG
   ### input data -> value to be encrypted ###
   ### key -> key to use for encryption ###
   def new_pg_encrypt_variable(data, key)
-    aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    ##aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    aes = OpenSSL::Cipher::AES.new('128-CBC')
     aes.encrypt
     aes.key = key
     aes.iv = '@@@@&&&&####$$$$'
@@ -80,7 +82,8 @@ module EncryptionNewPG
     decrypted_data = Hash[]
     key = paytmparams.delete(:key)
     keys = paytmparams.keys
-    aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    ##aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    aes = OpenSSL::Cipher::AES.new('128-CBC')
     begin
       keys.each do |k|
         data = paytmparams[k]
@@ -110,7 +113,8 @@ module EncryptionNewPG
   ### input data -> value to be decrypted ###
   ### key -> key to use for decryption ###
   def new_pg_decrypt_variable(data, key)
-    aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    ##aes = OpenSSL::Cipher::Cipher.new("aes-128-cbc")
+    aes = OpenSSL::Cipher::AES.new('128-CBC')
     aes.decrypt
     aes.key = key
     aes.iv = '@@@@&&&&####$$$$'
