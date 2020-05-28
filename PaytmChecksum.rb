@@ -34,11 +34,11 @@ class PaytmChecksum
     data = nil
     aes = OpenSSL::Cipher::AES.new('128-CBC')
     begin
-	    aes.decrypt
-	    aes.key = key
-	    aes.iv = @@iv
-	    encrypted = Base64.decode64(encrypted)
-	    data = aes.update(encrypted) + aes.final
+      aes.decrypt
+      aes.key = key
+      aes.iv = @@iv
+      encrypted = Base64.decode64(encrypted)
+      data = aes.update(encrypted) + aes.final
     rescue Exception => e
       return false
     end
@@ -59,7 +59,11 @@ class PaytmChecksum
     if !params.is_a?(Hash) and !params.is_a?(String) 
       raise "string or hash expected, " + params.class.to_s + " given"
     end
+
     if params.is_a?(Hash) 
+      if params.has_key? 'CHECKSUMHASH'
+        params.delete("CHECKSUMHASH")
+      end
       params = getStringByParams(params)
     end
     return verifySignatureByString(params,key,checksum)
